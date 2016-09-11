@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>todolist</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+    <script src="http://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $(".edit").click(function () {
+                $(this).closest(".task_list").children(".task_content").hide();
+                $(this).closest(".task_list").children(".editing").show();
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <form action="{% url 'home' %}" method="post">
+            {% csrf_token %}
+            <h3>ToDoList</h3>
+{#            {{ form.hidden_tag() }}#}
+            <div class="form-group" style="width:90%">
+                <input type="text" name="content" placeholder="有什么事情要做？">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="增加任务">
+            </div>
+        </form>
+    </div>
+
+
+    <div class="container">
+        {% for task in task_list %}
+
+            <div class="panel panel-default">
+              <div class="panel-body task_list">
+                  {% if task.status %}
+                    <p class="task_content" style="text-decoration:line-through">{{ task.content }}</p>
+                  {% else %}
+                    <p class="task_content" style="">{{ task.content }}</p>
+                  {% endif %}
+
+{#                    编辑 删除的按钮#}
+                  <div class="btn-group" role="group" aria-label="..."  style="float:right;">
+                      <button type="button" class="btn btn-default edit">编辑</button>
+                      <button type="button" class="btn btn-default">
+                          <a href="{% url 'delete' id=task.id %}">删除</a>
+                      </button>
+                  </div>
+
+{#                    编辑任务#}
+                  <form class="editing" method="post" style="display: none" action="{% url 'edit' task.id %}">
+                      {% csrf_token %}
+                      <div class="input-group editing" style="width:30%;">
+                        <input type="text" name="content" class="form-control" value="{{task.content}}">
+                        <input type="submit" value="确定修改">
+                      </div>
+                  </form>
+
+
+                    {#标记完成任务#}
+                  {% if task.status %}
+                    <a class="tasked " href="{% url 'unfinish' id=task.id %}" style="visibility: visible">取消完成</a>
+                  {% else %}
+                    <a class="tasked " href="{% url 'finish' id=task.id %}" style="visibility: visible">完成</a>
+                  {% endif %}
+
+              </div>
+            </div>
+
+        {% endfor %}
+    </div>
+
+</body>
+</html>
