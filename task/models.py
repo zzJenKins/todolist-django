@@ -6,5 +6,5 @@ from datetime import datetime
 class Task(models.Model):
     content = models.CharField(max_length=255)
     status = models.IntegerField(choices=((0,'未开始'),(1,'已完成')))
-    created = models.DateTimeField(default=datetime.utcnow)
+    created = models.DateTimeField(auto_now=True)
 

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.http import HttpRequest,HttpResponse,HttpResponseRedirect
 from .models import *
 
@@ -30,7 +30,10 @@ def edit(request,id):
         # content = u"修改的内容,已经修改了"
         if id:
             content = request.POST["content"]
-            Task.objects.filter(id=id).update(content=content)
+            # Task.objects.filter(id=id).update(content=content)
+            task = get_object_or_404(Task,pk=id)
+            task.content = content
+            task.save()
             return HttpResponseRedirect('/')
     else:
         return HttpResponseRedirect('/')
@@ -40,7 +43,8 @@ def edit(request,id):
 # 删除某个任务
 def delete(request,id):
     if id:
-        Task.objects.filter(id=id).delete()
+        task = Task.objects.filter(id=id)
+        task.delete()
         return HttpResponseRedirect('/')
 
     return HttpResponseRedirect('/')

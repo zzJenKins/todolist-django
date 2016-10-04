@@ -16,11 +16,13 @@
     </script>
 </head>
 <body>
+
+{% load tag_extra %}
+
     <div class="container">
         <form action="{% url 'home' %}" method="post">
             {% csrf_token %}
             <h3>ToDoList</h3>
-{#            {{ form.hidden_tag() }}#}
             <div class="form-group" style="width:90%">
                 <input type="text" name="content" placeholder="有什么事情要做？">
             </div>
@@ -37,9 +39,9 @@
             <div class="panel panel-default">
               <div class="panel-body task_list">
                   {% if task.status %}
-                    <p class="task_content" style="text-decoration:line-through">{{ task.content }}</p>
+                    <p class="task_content" style="text-decoration:line-through">{{ task.content }} --- {{ task.created | post_time }}</p>
                   {% else %}
-                    <p class="task_content" style="">{{ task.content }}</p>
+                    <p class="task_content" style="">{{ task.content }} --- {{ task.created | post_time }}</p>
                   {% endif %}
 
 {#                    编辑 删除的按钮#}
